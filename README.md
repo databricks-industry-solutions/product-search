@@ -3,27 +3,36 @@
 [![CLOUD](https://img.shields.io/badge/CLOUD-ALL-blue?logo=googlecloud&style=for-the-badge)](https://cloud.google.com/databricks)
 [![POC](https://img.shields.io/badge/POC-10_days-green?style=for-the-badge)](https://databricks.com/try-databricks)
 
-## Business Problem
-<List of the business use case the solution accelerator address>
+## LLM Product Search Accelerator
 
-## Scope
-<How we expect the user to use this content>
+The purpose of this solution accelerator is to show how large language models (LLMs) and their smaller brethren can be used to enable product search.  Unlike product search used in most sites today that rely upon keyword matches, LLMs enable what is commonly referred to as a semantic search where the *conceptual similarities* in words come into play.
 
-___
-<john.doe@databricks.com>
+A model's knowledge of the *conceptual similarity* between words comes from being exposed to a wide range of documents and from those documents learning that certain words tend to have close relationships to one another.  For example, one document may discuss the importance of play for *children* and use the term *child* teaching the model that *children* and *child* have some kind of relationship.  Other documents may use these terms in similar proximity and other documents discussing the same topics may introduce the term *kid* or *kids*.  It's possible that in some documents all four terms pop-up but even if that never happens, there may be enough overlap in the words surrounding these terms that the model comes to recognize a close association between all these terms.
 
-___
+Many of the LLMs available from the open source community come available  as pre-trained models where these word associations have already been learned from a wide range of publicly available  information. With the knowledge these models have already accumulated, they can be used to search the descriptive text for products in a product catalog for items that seem aligned with a search term or phrase supplied by a user. Where the products featured on a site tend to use a more specific set of terms that have their own patterns of association reflecting the tone and style of the retailer or the suppliers they feature, these models can be exposed to additional data specific to the site to shape its understanding of the language being used.  This *fine-tuning* exercise can be used to tailor an off-the-shelf model to the nuances of a specific product catalog, enabling even more effective search results.
 
-
-IMAGE TO REFERENCE ARCHITECTURE
+In this solution accelerator, we will show both versions of this pattern using an off-the-shelf model and one tuned to a specific body of product text. We'll then tackle the issues related to model deployment so that users can see how a semantic search capability can easily be deployed through their Databricks environment.
 
 ___
+<tim.lortz@databricks.com> 
+<mustafaali.sezer@databricks.com> 
+<peyman@databricks.com>
 
-&copy; 2022 Databricks, Inc. All rights reserved. The source in this notebook is provided subject to the Databricks License [https://databricks.com/db-license-source].  All included or referenced third party libraries are subject to the licenses set forth below.
+___
+
+
+<img src='https://brysmiwasb.blob.core.windows.net/demos/images/search_simple_architecture.png' width=800>
+
+___
+
+&copy; 2023 Databricks, Inc. All rights reserved. The source in this notebook is provided subject to the Databricks License [https://databricks.com/db-license-source].  All included or referenced third party libraries are subject to the licenses set forth below.
 
 | library                                | description             | license    | source                                              |
 |----------------------------------------|-------------------------|------------|-----------------------------------------------------|
-| PyYAML                                 | Reading Yaml files      | MIT        | https://github.com/yaml/pyyaml                      |
+|  WANDS | Wayfair product search relevance data | MIT  | https://github.com/wayfair/WANDS   |
+| langchain | Building applications with LLMs through composability | MIT  |   https://pypi.org/project/langchain/ |
+| chromadb | An open source embedding database |  Apache |  https://pypi.org/project/chromadb/  |
+| sentence-transformers | Compute dense vector representations for sentences, paragraphs, and images | Apache 2.0 |https://pypi.org/project/sentence-transformers/ |
 
 ## Getting started
 

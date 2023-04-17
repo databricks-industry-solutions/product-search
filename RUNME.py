@@ -32,84 +32,92 @@ from solacc.companion import NotebookSolutionCompanion
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC Before setting up the rest of the accelerator, we need set up a few credentials in order to access ____. Grab ___ key for your ___ account ([documentation](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication) here). Here we demonstrate using the [Databricks Secret Scope](https://docs.databricks.com/security/secrets/secret-scopes.html) for credential management. 
-# MAGIC 
-# MAGIC Copy the block of code below, replace the name the secret scope and fill in the credentials and execute the block. After executing the code, The accelerator notebook will be able to access the credentials it needs.
-# MAGIC 
-# MAGIC 
-# MAGIC ```
-# MAGIC client = NotebookSolutionCompanion().client
-# MAGIC try:
-# MAGIC   client.execute_post_json(f"{client.endpoint}/api/2.0/secrets/scopes/create", {"scope": "solution-accelerator-cicd"})
-# MAGIC except:
-# MAGIC   pass
-# MAGIC client.execute_post_json(f"{client.endpoint}/api/2.0/secrets/put", {
-# MAGIC   "scope": "solution-accelerator-cicd",
-# MAGIC   "key": "kaggle_username",
-# MAGIC   "string_value": "____"
-# MAGIC })
-# MAGIC 
-# MAGIC client.execute_post_json(f"{client.endpoint}/api/2.0/secrets/put", {
-# MAGIC   "scope": "solution-accelerator-cicd",
-# MAGIC   "key": "kaggle_key",
-# MAGIC   "string_value": "____"
-# MAGIC })
-# MAGIC ```
-
-# COMMAND ----------
-
 job_json = {
         "timeout_seconds": 28800,
         "max_concurrent_runs": 1,
         "tags": {
             "usage": "solacc_testing",
-            "group": "SOLACC"
+            "group": "RCG",
+            "accelerator": "prod_search"
         },
         "tasks": [
             {
-                "job_cluster_key": "sample_solacc_cluster",
+                "job_cluster_key": "prod_search_cluster",
                 "notebook_task": {
-                    "notebook_path": f"00_[PLEASE READ] Contributing to Solution Accelerators"
+                    "notebook_path": f"00_Intro_and_Config"
                 },
-                "task_key": "sample_solacc_01"
+                "task_key": "prod_search_00"
             },
-            # {
-            #     "job_cluster_key": "sample_solacc_cluster",
-            #     "notebook_task": {
-            #         "notebook_path": f"02_Analysis"
-            #     },
-            #     "task_key": "sample_solacc_02",
-            #     "depends_on": [
-            #         {
-            #             "task_key": "sample_solacc_01"
-            #         }
-            #     ]
-            # }
+            {
+                "job_cluster_key": "prod_search_cluster",
+                "notebook_task": {
+                    "notebook_path": f"01_Data_Prep"
+                },
+                "task_key": "prod_search_01",
+                "depends_on": [
+                    {
+                        "task_key": "prod_search_00"
+                    }
+                ]
+            },
+            {
+                "job_cluster_key": "prod_search_cluster",
+                "notebook_task": {
+                    "notebook_path": f"02_Define_Basic_Search"
+                },
+                "task_key": "prod_search_02",
+                "depends_on": [
+                    {
+                        "task_key": "prod_search_01"
+                    }
+                ]
+            },
+            {
+                "job_cluster_key": "prod_search_cluster",
+                "notebook_task": {
+                    "notebook_path": f"03_Fine_Tune_Model"
+                },
+                "task_key": "prod_search_03",
+                "depends_on": [
+                    {
+                        "task_key": "prod_search_02"
+                    }
+                ]
+            },
+            {
+                "job_cluster_key": "prod_search_cluster",
+                "notebook_task": {
+                    "notebook_path": f"04_Deploy_Model"
+                },
+                "task_key": "prod_search_04",
+                "depends_on": [
+                    {
+                        "task_key": "prod_search_03"
+                    }
+                ]
+            }
         ],
         "job_clusters": [
             {
-                "job_cluster_key": "sample_solacc_cluster",
+                "job_cluster_key": "prod_search_cluster",
                 "new_cluster": {
-                    "spark_version": "11.3.x-cpu-ml-scala2.12",
+                    "spark_version": "12.2.x-gpu-ml-scala2.12",
                 "spark_conf": {
-                    "spark.databricks.delta.formatCheck.enabled": "false"
+                    "spark.master": "local[*, 4]",
+                    "spark.databricks.cluster.profile": "singleNode",
+                    "spark.databricks.delta.preview.enabled": "true"
                     },
-                    "num_workers": 2,
-                    "node_type_id": {"AWS": "i3.xlarge", "MSA": "Standard_DS3_v2", "GCP": "n1-highmem-4"},
+                    "num_workers": 0,
+                    "node_type_id": {"AWS": "g5.8xlarge", "MSA": "Standard_NC12s_v3"}, # this accelerator does not support GCP
                     "custom_tags": {
                         "usage": "solacc_testing"
                     },
-                }
+                },
+                "single_user_name": dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get(),
+                "data_security_mode": "LEGACY_SINGLE_USER_STANDARD",
             }
         ]
     }
-
-# COMMAND ----------
-
-spark.sql(f"CREATE DATABASE IF NOT EXISTS databricks_solacc LOCATION '/databricks_solacc/'")
-spark.sql(f"CREATE TABLE IF NOT EXISTS databricks_solacc.dbsql (path STRING, id STRING, solacc STRING)")
-dbsql_config_table = "databricks_solacc.dbsql"
 
 # COMMAND ----------
 
@@ -117,4 +125,3 @@ dbutils.widgets.dropdown("run_job", "False", ["True", "False"])
 run_job = dbutils.widgets.get("run_job") == "True"
 nsc = NotebookSolutionCompanion()
 nsc.deploy_compute(job_json, run_job=run_job)
-_ = nsc.deploy_dbsql("./dashboards/IoT Streaming SA Anomaly Detection.dbdash", dbsql_config_table, spark)
