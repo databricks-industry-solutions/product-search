@@ -32,33 +32,6 @@ from solacc.companion import NotebookSolutionCompanion
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC Before setting up the rest of the accelerator, we need set up a few credentials in order to access ____. Grab ___ key for your ___ account ([documentation](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication) here). Here we demonstrate using the [Databricks Secret Scope](https://docs.databricks.com/security/secrets/secret-scopes.html) for credential management. 
-# MAGIC 
-# MAGIC Copy the block of code below, replace the name the secret scope and fill in the credentials and execute the block. After executing the code, The accelerator notebook will be able to access the credentials it needs.
-# MAGIC 
-# MAGIC 
-# MAGIC ```
-# MAGIC client = NotebookSolutionCompanion().client
-# MAGIC try:
-# MAGIC   client.execute_post_json(f"{client.endpoint}/api/2.0/secrets/scopes/create", {"scope": "solution-accelerator-cicd"})
-# MAGIC except:
-# MAGIC   pass
-# MAGIC client.execute_post_json(f"{client.endpoint}/api/2.0/secrets/put", {
-# MAGIC   "scope": "solution-accelerator-cicd",
-# MAGIC   "key": "kaggle_username",
-# MAGIC   "string_value": "____"
-# MAGIC })
-# MAGIC 
-# MAGIC client.execute_post_json(f"{client.endpoint}/api/2.0/secrets/put", {
-# MAGIC   "scope": "solution-accelerator-cicd",
-# MAGIC   "key": "kaggle_key",
-# MAGIC   "string_value": "____"
-# MAGIC })
-# MAGIC ```
-
-# COMMAND ----------
-
 job_json = {
         "timeout_seconds": 28800,
         "max_concurrent_runs": 1,
@@ -135,11 +108,13 @@ job_json = {
                     "spark.databricks.delta.preview.enabled": "true"
                     },
                     "num_workers": 0,
-                    "node_type_id": {"AWS": "g5.8xlarge", "MSA": "Standard_NC12s_v3", "GCP": "a2-highgpu-2g"},
+                    "node_type_id": {"AWS": "g5.8xlarge", "MSA": "Standard_NC12s_v3"}, # this accelerator does not support GCP
                     "custom_tags": {
                         "usage": "solacc_testing"
                     },
-                }
+                },
+                "single_user_name": dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get(),
+                "data_security_mode": "LEGACY_SINGLE_USER_STANDARD",
             }
         ]
     }

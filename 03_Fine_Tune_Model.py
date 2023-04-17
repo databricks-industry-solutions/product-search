@@ -438,11 +438,14 @@ client.transition_model_version_stage(
 # retrieve model from registry
 model = mlflow.pyfunc.load_model(f"models:/{config['tuned_model_name']}/Production")
 
+# COMMAND ----------
+
 # construct search
 search = pd.DataFrame({'query':['kid-proof rug']})
+# search = pd.DataFrame({'query':['kids animal print area rug']})
 
 # call model
-model.predict(search)
+display(model.predict(search))
 
 # COMMAND ----------
 

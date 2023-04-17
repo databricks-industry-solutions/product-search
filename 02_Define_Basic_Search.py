@@ -334,16 +334,16 @@ model = mlflow.pyfunc.load_model(f"models:/{config['basic_model_name']}/Producti
 
 # MAGIC %md If you are curious why we are constructing a pandas dataframe for our search term, please understand that this aligns with how data will eventually passed to our model when we host it in model serving.  The logic in our *predict* function anticipates this as well.
 # MAGIC 
-# MAGIC Inferencing a single record can take approximately 200-300 ms, allowing the model to be served and used by a user-facing webapp. 
+# MAGIC Inferencing a single record can take approximately 50-300 ms, allowing the model to be served and used by a user-facing webapp. 
 
 # COMMAND ----------
 
 # DBTITLE 1,Test Persisted Model with Sample Search
 # construct search
 search = pd.DataFrame({'query':['kid-proof rug']})
-
+# search = pd.DataFrame({'query':['kids animal print area rug']}) #fold out toddler couch
 # call model
-model.predict(search)
+display(model.predict(search))
 
 # COMMAND ----------
 
