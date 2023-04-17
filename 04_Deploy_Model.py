@@ -6,6 +6,8 @@
 # MAGIC %md ##Introduction
 # MAGIC 
 # MAGIC At this point we have a basic model as well as a tuned model, packaged with access to product embeddings and ready for deployment.  In this notebook, we will show how this model can be deployed using [Databricks Model Serving](https://docs.databricks.com/machine-learning/model-serving/index.html) so that applications can simply call a REST API to perform a search in real-time.
+# MAGIC 
+# MAGIC <img src='https://brysmiwasb.blob.core.windows.net/demos/images/search_simple_architecture.png' width=800>
 
 # COMMAND ----------
 
