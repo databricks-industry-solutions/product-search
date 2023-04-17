@@ -7,7 +7,7 @@
 # MAGIC 
 # MAGIC At this point we have a basic model as well as a tuned model, packaged with access to product embeddings and ready for deployment.  In this notebook, we will show how this model can be deployed using [Databricks Model Serving](https://docs.databricks.com/machine-learning/model-serving/index.html) so that applications can simply call a REST API to perform a search in real-time.
 # MAGIC 
-# MAGIC <img src='https://brysmiwasb.blob.core.windows.net/demos/images/search_simple_architecture.png' width=800>
+# MAGIC <img src='https://github.com/databricks-industry-solutions/product-search/raw/main/images/inference.png' width=800>
 
 # COMMAND ----------
 
@@ -41,11 +41,8 @@ print(f"Tuned Model: {config['tuned_model_name']}")
 # DBTITLE 1,Select a model 
 model_name = config['tuned_model_name']
 
-# connect to mlflow
-client = mlflow.tracking.MlflowClient()
-
 # identify model version in registry
-model_version = client.get_latest_versions(name = model_name, stages = ["Production"])[0].version
+model_version = mlflow.tracking.MlflowClient().get_latest_versions(name = model_name, stages = ["Production"])[0].version
 
 # COMMAND ----------
 
