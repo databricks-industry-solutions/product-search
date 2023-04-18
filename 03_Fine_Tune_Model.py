@@ -434,15 +434,14 @@ client.transition_model_version_stage(
 
 # COMMAND ----------
 
-# DBTITLE 1,Test the Persisted Model
-# retrieve model from registry
+# DBTITLE 1,Retrieve model from registry
 model = mlflow.pyfunc.load_model(f"models:/{config['tuned_model_name']}/Production")
 
 # COMMAND ----------
 
+# DBTITLE 1,Test the Persisted Model
 # construct search
-search = pd.DataFrame({'query':['kid-proof rug']})
-# search = pd.DataFrame({'query':['kids animal print area rug']})
+search = pd.DataFrame({'query':['farmhouse dining room table']})
 
 # call model
 display(model.predict(search))

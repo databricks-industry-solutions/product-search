@@ -340,8 +340,8 @@ model = mlflow.pyfunc.load_model(f"models:/{config['basic_model_name']}/Producti
 
 # DBTITLE 1,Test Persisted Model with Sample Search
 # construct search
-search = pd.DataFrame({'query':['kid-proof rug']})
-# search = pd.DataFrame({'query':['kids animal print area rug']}) #fold out toddler couch
+search = pd.DataFrame({'query':['farmhouse dining room table']})
+
 # call model
 display(model.predict(search))
 
