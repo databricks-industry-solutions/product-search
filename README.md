@@ -21,7 +21,7 @@ ___
 ___
 
 
-<img src='https://brysmiwasb.blob.core.windows.net/demos/images/search_simple_architecture.png' width=800>
+<img src='https://github.com/databricks-industry-solutions/product-search/raw/main/images/inference.png' width=800>
 
 ___
 
