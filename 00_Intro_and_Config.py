@@ -66,7 +66,7 @@ config['databricks url'] = ctx.apiUrl().getOrElse(None)
 # DBTITLE 1,mlflow experiment
 import mlflow
 username = dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get()
-mlflow.set_experiment('/Users/{}/transbed'.format(username))
+mlflow.set_experiment('/Users/{}/prod_search'.format(username))
 
 # COMMAND ----------
 
