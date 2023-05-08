@@ -1,10 +1,10 @@
 # Databricks notebook source
-# MAGIC %md The purpose of this notebook is to fine-tune our model for use in the Product Search accelerator.  This notebook was developed on a **single node Databricks ML 12.2 LTS GPU** cluster.
+# MAGIC %md The purpose of this notebook is to fine-tune our model for use in the Product Search accelerator.  You may find this notebook on https://github.com/databricks-industry-solutions/product-search.
 
 # COMMAND ----------
 
 # MAGIC %md ##Introduction
-# MAGIC 
+# MAGIC
 # MAGIC Having demonstrated the basics of assembling a model and supporting data to enable a semantic search, we will now focus on fine-tuning the model.  During fine-tuning, the model is fit against a set of data specific to a particular domain, such as our product catalog.  The original knowledge accumulated by our model from its pre-training remains intact but is supplemented with information gleaned from the additional data provided.  Once the model has been tuned to our satisfaction, it is packaged and persisted just like as before.
 
 # COMMAND ----------
@@ -36,7 +36,7 @@ import mlflow
 # COMMAND ----------
 
 # MAGIC %md ##Step 1: Estimate Baseline Model Performance
-# MAGIC 
+# MAGIC
 # MAGIC In this first step, we'll retrieve the queries and the products returned with each from the WANDS dataset.  For each query-product combination, a numerical score assigned to each combination based on the perceived alignment of the product with the query is retrieved as well:
 
 # COMMAND ----------
@@ -141,7 +141,7 @@ print(original_corr_coef_score)
 # COMMAND ----------
 
 # MAGIC %md ##Step 2: Fine-Tune the Model
-# MAGIC 
+# MAGIC
 # MAGIC With a baseline measurement of the original model's performance in-hand, we can now fine-tune it using our annotated search result data.  We will start by restructuring our query results into a list of inputs as required by the model:
 
 # COMMAND ----------
@@ -168,7 +168,7 @@ tuned_model = SentenceTransformer('all-MiniLM-L12-v2')
 # COMMAND ----------
 
 # MAGIC %md And we will then tune the model to minimize cosine similarity distances:
-# MAGIC 
+# MAGIC
 # MAGIC **NOTE** This step will run faster by scaling up the server used for your single-node cluster.
 
 # COMMAND ----------
@@ -194,7 +194,7 @@ tuned_model.fit(
 # COMMAND ----------
 
 # MAGIC %md ##Step 3: Estimate Fine-Tuned Model Performance
-# MAGIC 
+# MAGIC
 # MAGIC With our model tuned, we can assess it's performance just like we did before:
 
 # COMMAND ----------
@@ -251,7 +251,7 @@ print(f"With tuning, the correlation coefficient went from {original_corr_coef_s
 # COMMAND ----------
 
 # MAGIC %md ##Step 4: Persist Model for Deployment
-# MAGIC 
+# MAGIC
 # MAGIC Just like before, we can package our tuned model with our data to enable its persistence (and eventual deployment).  The following steps are presented just as they are in the previous notebook with minor adjustments to separate our original assets from the tuned assets:
 
 # COMMAND ----------
@@ -449,7 +449,7 @@ display(model.predict(search))
 # COMMAND ----------
 
 # MAGIC %md © 2023 Databricks, Inc. All rights reserved. The source in this notebook is provided subject to the Databricks License. All included or referenced third party libraries are subject to the licenses set forth below.
-# MAGIC 
+# MAGIC
 # MAGIC | library                                | description             | license    | source                                              |
 # MAGIC |----------------------------------------|-------------------------|------------|-----------------------------------------------------|
 # MAGIC |  WANDS | Wayfair product search relevance data | MIT  | https://github.com/wayfair/WANDS   |

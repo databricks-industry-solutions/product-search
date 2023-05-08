@@ -1,12 +1,12 @@
 # Databricks notebook source
-# MAGIC %md The purpose of this notebook is to deploy our model as part of the Product Search accelerator.  
+# MAGIC %md The purpose of this notebook is to deploy our model as part of the Product Search accelerator.  You may find this notebook on https://github.com/databricks-industry-solutions/product-search.
 
 # COMMAND ----------
 
 # MAGIC %md ##Introduction
-# MAGIC 
+# MAGIC
 # MAGIC At this point we have a basic model as well as a tuned model, packaged with access to product embeddings and ready for deployment.  In this notebook, we will show how this model can be deployed using [Databricks Model Serving](https://docs.databricks.com/machine-learning/model-serving/index.html) so that applications can simply call a REST API to perform a search in real-time.
-# MAGIC 
+# MAGIC
 # MAGIC <img src='https://github.com/databricks-industry-solutions/product-search/raw/main/images/inference.png' width=800>
 
 # COMMAND ----------
@@ -27,7 +27,7 @@ import time
 # COMMAND ----------
 
 # MAGIC %md ##Step 1: Review Model Names
-# MAGIC 
+# MAGIC
 # MAGIC If we have successfully run the last two notebooks, we should have two models deployed to the MLflow model registry, each of which has been elevated to Production status.  You can select one or the other for Step 2:
 
 # COMMAND ----------
@@ -47,34 +47,34 @@ model_version = mlflow.tracking.MlflowClient().get_latest_versions(name = model_
 # COMMAND ----------
 
 # MAGIC %md ##Step 2: Deploy Model to Model Serving Endpoint
-# MAGIC 
+# MAGIC
 # MAGIC To deploy our model, we need to reconfigure our Databricks workspace for Machine Learning.  We can do this by clicking on the drop-down at the top of the left-hand navigation bar and selecting *Machine Learning*.
 # MAGIC </p>
-# MAGIC 
+# MAGIC
 # MAGIC <img src='https://brysmiwasb.blob.core.windows.net/demos/images/search_change_workspace.png'>
-# MAGIC 
+# MAGIC
 # MAGIC Once we've done that, we should be able to select *Serving* from that same left-hand navigation bar.
-# MAGIC 
+# MAGIC
 # MAGIC Within the Serving Endpoints page, click on the *Create Serving Endpoint* button.  Give your endpoint a name, select your model - it may help to start typing the model name to limit the search - and then select the model version.  Select the compute size based on the number of requests expected and select/deselect the *scale to zero* option based on whether you want the service to scale down completely during a sustained period of inactivity.  (Spinning back up from zero does take a little time once a request has been received.)
 # MAGIC </p>
-# MAGIC 
+# MAGIC
 # MAGIC <img src='https://brysmiwasb.blob.core.windows.net/demos/images/search_create_serving_endpoint2.png' width=90%>
-# MAGIC 
+# MAGIC
 # MAGIC Click the *Create serving endpoint* button to deploy the endpoint and monitor the deployment process until the *Serving Endpoint State* is *Ready*:
 # MAGIC </p>
-# MAGIC 
+# MAGIC
 # MAGIC <img src='https://brysmiwasb.blob.core.windows.net/demos/images/search_endpoint_ready.png' width=90%>
-# MAGIC 
-# MAGIC 
+# MAGIC
+# MAGIC
 # MAGIC Before leaving this page, be sure to click the *Query Endpoint* button in the upper right-hand corner.  In the resulting pane, click on the *Python* tab and copy the displayed code to the cell below:
 # MAGIC </p>
-# MAGIC 
+# MAGIC
 # MAGIC <img src='https://brysmiwasb.blob.core.windows.net/demos/images/search_query_endpoint.PNG' width=50%>
 
 # COMMAND ----------
 
 # MAGIC %md Alternatively, we can use the API instead of the UI to [set up the model serving endpoint](https://docs.databricks.com/machine-learning/model-serving/create-manage-serving-endpoints.html#create-model-serving-endpoints). The effect of the following 3 blocks of code is equivalent to the steps described above. We provide this option to showcase automation and to make sure that this notebook can be consistently executed end-to-end without requiring manual intervention.
-# MAGIC 
+# MAGIC
 # MAGIC To use the Databricks API, you need to create environmental variables named *DATABRICKS_URL* and *DATABRICKS_TOKEN* which must be your workspace url and a valid [personal access token](https://learn.microsoft.com/en-us/azure/databricks/dev-tools/api/latest/authentication). We have retrieved and set these values up for you in notebook *00* as part of the *config* setting.
 
 # COMMAND ----------
@@ -129,7 +129,7 @@ create_endpoint(model_name, model_version)
 # COMMAND ----------
 
 # MAGIC %md ##Step 3: Test the Model Serving Endpoint
-# MAGIC 
+# MAGIC
 # MAGIC With the code for testing our endpoint in the cell below, we can now prepare to submit data against our endpoint:
 
 # COMMAND ----------
@@ -169,7 +169,7 @@ score_model(
 # COMMAND ----------
 
 # MAGIC %md © 2023 Databricks, Inc. All rights reserved. The source in this notebook is provided subject to the Databricks License. All included or referenced third party libraries are subject to the licenses set forth below.
-# MAGIC 
+# MAGIC
 # MAGIC | library                                | description             | license    | source                                              |
 # MAGIC |----------------------------------------|-------------------------|------------|-----------------------------------------------------|
 # MAGIC |  WANDS | Wayfair product search relevance data | MIT  | https://github.com/wayfair/WANDS   |

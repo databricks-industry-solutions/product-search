@@ -1,26 +1,26 @@
 # Databricks notebook source
-# MAGIC %md The purpose of this notebook is to prepare the data for the Product Search solution accelerator.  This notebook was developed on a **Databricks ML 12.2 LTS GPU** cluster.
+# MAGIC %md The purpose of this notebook is to prepare the data for the Product Search solution accelerator.  You may find this notebook on https://github.com/databricks-industry-solutions/product-search.
 
 # COMMAND ----------
 
 # MAGIC %md ##Introduction
-# MAGIC 
+# MAGIC
 # MAGIC In this notebook, we will access the [Wayfair Annotation Dataset (WANDS)](https://www.aboutwayfair.com/careers/tech-blog/wayfair-releases-wands-the-largest-and-richest-publicly-available-dataset-for-e-commerce-product-search-relevance), made accessible by [Wayfair](https://www.wayfair.com/) under an MIT License.
-# MAGIC 
+# MAGIC
 # MAGIC The dataset consists of three file types:
 # MAGIC </p>
-# MAGIC 
+# MAGIC
 # MAGIC * Product - 42,000+ products features on the Wayfair website
 # MAGIC * Query - 480 customer queries used for product searches
 # MAGIC * Label - 233,000+ product results for the provided queries labeled for relevance
-# MAGIC 
+# MAGIC
 # MAGIC In the [Annotations Guidelines document](https://github.com/wayfair/WANDS/blob/main/Product%20Search%20Relevance%20Annotation%20Guidelines.pdf) that accompanies the dataset, Wayfair addresses the methods by which queries were labeled.  The three labels assigned to any query result are:
 # MAGIC </p>
-# MAGIC 
+# MAGIC
 # MAGIC * Exact match - this label represents the surfaced product fully matches the search query
 # MAGIC * Partial match - this label represents the surfaced product does not fully match the search query
 # MAGIC * Irrelevant - this label indicates the product is not relevant to the query
-# MAGIC 
+# MAGIC
 # MAGIC As explained in the document, there is a bit of subjectivity in assigning these labels but the goal here is not to capture ground truth but instead to capture informed human judgement.
 
 # COMMAND ----------
@@ -39,7 +39,7 @@ import os
 # COMMAND ----------
 
 # MAGIC %md ##Step 1: Download Dataset Files
-# MAGIC 
+# MAGIC
 # MAGIC In this step, we will download the dataset files to a directory accessible within the Databricks workspace:
 
 # COMMAND ----------
@@ -51,21 +51,21 @@ os.environ['WANDS_DOWNLOADS_PATH'] = '/dbfs'+ config['dbfs_path'] + '/downloads'
 
 # DBTITLE 1,Download Dataset Files
 # MAGIC %sh 
-# MAGIC 
+# MAGIC
 # MAGIC # delete any old copies of temp data
 # MAGIC rm -rf $WANDS_DOWNLOADS_PATH
-# MAGIC 
+# MAGIC
 # MAGIC # make directory for temp tiles
 # MAGIC mkdir -p $WANDS_DOWNLOADS_PATH
-# MAGIC 
+# MAGIC
 # MAGIC # move to temp directory
 # MAGIC cd $WANDS_DOWNLOADS_PATH
-# MAGIC 
+# MAGIC
 # MAGIC # download datasets
 # MAGIC wget -q https://raw.githubusercontent.com/wayfair/WANDS/main/dataset/label.csv
 # MAGIC wget -q https://raw.githubusercontent.com/wayfair/WANDS/main/dataset/product.csv
 # MAGIC wget -q https://raw.githubusercontent.com/wayfair/WANDS/main/dataset/query.csv
-# MAGIC 
+# MAGIC
 # MAGIC # show folder contents
 # MAGIC pwd
 # MAGIC ls -l
@@ -73,7 +73,7 @@ os.environ['WANDS_DOWNLOADS_PATH'] = '/dbfs'+ config['dbfs_path'] + '/downloads'
 # COMMAND ----------
 
 # MAGIC %md ##Step 2: Write Data to Tables
-# MAGIC 
+# MAGIC
 # MAGIC In this step, we will read data from each of the previously downloaded files and write the data to tables that will make subsequent access easier and faster:
 
 # COMMAND ----------
@@ -171,9 +171,9 @@ display(spark.table('labels'))
 # COMMAND ----------
 
 # MAGIC %md ##Step 3: Assign Label Scores
-# MAGIC 
+# MAGIC
 # MAGIC To prepare the text-based labels assigned to products returned by a query for use in our algorithm, we'll convert the labels to numerical scores based our judgement of how these labels should be weighted:
-# MAGIC 
+# MAGIC
 # MAGIC **NOTE** [This article](https://medium.com/@nikhilbd/how-to-measure-the-relevance-of-search-engines-18862479ebc) provides a nice discussion of how to approach the scoring of search results for relevance should you wish to explore alternative scoring patterns. 
 
 # COMMAND ----------
@@ -186,7 +186,7 @@ if 'label_score' not in spark.table('labels').columns:
 
 # DBTITLE 1,Assign Label Scores
 # MAGIC %sql
-# MAGIC 
+# MAGIC
 # MAGIC UPDATE labels
 # MAGIC SET label_score = 
 # MAGIC   CASE lower(label)
@@ -199,7 +199,7 @@ if 'label_score' not in spark.table('labels').columns:
 # COMMAND ----------
 
 # MAGIC %md © 2023 Databricks, Inc. All rights reserved. The source in this notebook is provided subject to the Databricks License. All included or referenced third party libraries are subject to the licenses set forth below.
-# MAGIC 
+# MAGIC
 # MAGIC | library                                | description             | license    | source                                              |
 # MAGIC |----------------------------------------|-------------------------|------------|-----------------------------------------------------|
 # MAGIC |  WANDS | Wayfair product search relevance data | MIT  | https://github.com/wayfair/WANDS   |
