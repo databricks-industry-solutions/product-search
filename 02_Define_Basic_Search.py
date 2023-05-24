@@ -16,7 +16,7 @@
 # COMMAND ----------
 
 # DBTITLE 1,Install Required Libraries
-# MAGIC %pip install langchain==0.0.173 chromadb==0.3.23 sentence_transformers=2.2.2
+# MAGIC %pip install sentence-transformers==2.2.2 langchain==0.0.179 chromadb==0.3.25 typing-inspect==0.8.0 typing_extensions==4.5.0
 
 # COMMAND ----------
 
@@ -250,10 +250,6 @@ print(
 # COMMAND ----------
 
 # MAGIC %md Next, we need to identify the packages we need to insure are installed as our model is deployed.  These are:
-
-# COMMAND ----------
-
-
 
 # COMMAND ----------
 
