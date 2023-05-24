@@ -57,6 +57,7 @@ config['tuned_model_name'] = 'wands_tuned_search'
 # COMMAND ----------
 
 # DBTITLE 1,Databricks url and token
+import os
 ctx = dbutils.notebook.entry_point.getDbutils().notebook().getContext()
 config['databricks token'] = ctx.apiToken().getOrElse(None)
 config['databricks url'] = ctx.apiUrl().getOrElse(None)
