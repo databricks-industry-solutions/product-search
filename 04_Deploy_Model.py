@@ -119,7 +119,7 @@ import numpy as np
 import pandas as pd
 import json
 
-endpoint_url = f"""{config['databricks url']}/serving-endpoints/{model_name}/invocations"""
+endpoint_url = f"""{config['databricks url']}/serving-endpoints/{config['serving_endpoint_name']}/invocations"""
 
 def create_tf_serving_json(data):
   return {'inputs': {name: data[name].tolist() for name in data.keys()} if isinstance(data, dict) else data.tolist()}
