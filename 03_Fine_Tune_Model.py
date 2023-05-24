@@ -10,7 +10,7 @@
 # COMMAND ----------
 
 # DBTITLE 1,Install Required Libraries
-# MAGIC %pip install sentence-transformers langchain chromadb
+# MAGIC %pip install sentence-transformers==2.2.2 langchain==0.0.173 chromadb==0.3.23
 
 # COMMAND ----------
 

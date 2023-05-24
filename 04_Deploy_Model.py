@@ -79,52 +79,30 @@ model_version = mlflow.tracking.MlflowClient().get_latest_versions(name = model_
 
 # COMMAND ----------
 
-# DBTITLE 1,Set Personal Access Token to Access the Model Serving Endpoint; Set Endpoint URL
-os.environ['DATABRICKS_TOKEN'] = config["databricks token"]
-os.environ['DATABRICKS_URL'] = config["databricks url"]
-endpoint_url = f"""{config['databricks url']}/serving-endpoints/{model_name}/invocations"""
+# MAGIC %run ./util/create-update-serving-endpoint
 
 # COMMAND ----------
 
-# DBTITLE 1,Define function to create endpoint according to our specification
-def create_endpoint(model_name, model_version):
-  """Create endpoint and wait until the endpoint is ready"""
-  url = f'{os.environ.get("DATABRICKS_URL")}/api/2.0/serving-endpoints'
-  headers = {'Authorization': f'Bearer {os.environ.get("DATABRICKS_TOKEN")}', 
-'Content-Type': 'application/json'}
-  ds_dict = {
-    "name": model_name,
-    "config": {
-     "served_models": [{
-       "model_name": model_name,
-       "model_version": model_version,
-       "workload_size": "Medium",
-       "scale_to_zero_enabled": False,
-     }]
-   }
-  }
-  data_json = json.dumps(ds_dict)
-  
-  # deploy endpoint
-  response = requests.request(method='POST', headers=headers, url=url, data=data_json)
-  if response.status_code != 200: 
-    if response.json()["error_code"] != "RESOURCE_ALREADY_EXISTS": # if error is RESOURCE_ALREADY_EXISTS, pass
-      raise Exception(f'Request failed with status {response.status_code}, {response.text}')
-
-  # wait until deployment is ready
-  response = requests.request(method='GET', headers=headers, url=f"{url}/{model_name}")
-  while response.json()["state"]["ready"] != "READY":
-    print("Waiting 30s for deployment to finish")
-    time.sleep(30)
-    response = requests.request(method='GET', headers=headers, url=f"{url}/{model_name}")
-    if response.status_code != 200:
-      raise Exception(f'Request failed with status {response.status_code}, {response.text}')
-  return response.json()
+# DBTITLE 1,Define model serving config
+served_models = [
+    {
+      "name": "Product-Search",
+      "model_name": model_name,
+      "model_version": model_version,
+      "workload_size": "Medium",
+      "scale_to_zero_enabled": True
+    }
+]
+traffic_config = {"routes": [{"served_model_name": "Product-Search", "traffic_percentage": "100"}]}
 
 # COMMAND ----------
 
-# DBTITLE 1,Create model serving endpoint
-create_endpoint(model_name, model_version)
+# DBTITLE 1,Create or update model serving endpoint
+# kick off endpoint creation/update
+if not endpoint_exists(config['serving_endpoint_name']):
+  create_endpoint(config['serving_endpoint_name'], served_models)
+else:
+  update_endpoint(config['serving_endpoint_name'], served_models)
 
 # COMMAND ----------
 
@@ -140,6 +118,8 @@ import requests
 import numpy as np
 import pandas as pd
 import json
+
+endpoint_url = f"""{config['databricks url']}/serving-endpoints/{model_name}/invocations"""
 
 def create_tf_serving_json(data):
   return {'inputs': {name: data[name].tolist() for name in data.keys()} if isinstance(data, dict) else data.tolist()}

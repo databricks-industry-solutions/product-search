@@ -60,6 +60,8 @@ config['tuned_model_name'] = 'wands_tuned_search'
 ctx = dbutils.notebook.entry_point.getDbutils().notebook().getContext()
 config['databricks token'] = ctx.apiToken().getOrElse(None)
 config['databricks url'] = ctx.apiUrl().getOrElse(None)
+os.environ['DATABRICKS_TOKEN'] = config["databricks token"]
+os.environ['DATABRICKS_URL'] = config["databricks url"]
 
 # COMMAND ----------
 
@@ -67,6 +69,11 @@ config['databricks url'] = ctx.apiUrl().getOrElse(None)
 import mlflow
 username = dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get()
 mlflow.set_experiment('/Users/{}/prod_search'.format(username))
+
+# COMMAND ----------
+
+# DBTITLE 1,Model serving endpoint
+config['serving_endpoint_name'] = 'wands_search'
 
 # COMMAND ----------
 
