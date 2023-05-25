@@ -387,6 +387,7 @@ print(
 import pandas
 import langchain
 import chromadb
+import sentence_transformers
 
 # get base environment configuration
 conda_env = mlflow.pyfunc.get_default_conda_env()
@@ -395,7 +396,8 @@ conda_env = mlflow.pyfunc.get_default_conda_env()
 packages = [
   f'pandas=={pandas.__version__}',
   f'langchain=={langchain.__version__}',
-  f'chromadb=={chromadb.__version__}'
+  f'chromadb=={chromadb.__version__}',
+  f'sentence_transformers=={sentence_transformers.__version__}'
   ]
 
 # add required packages to environment configuration
