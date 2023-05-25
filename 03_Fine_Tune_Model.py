@@ -305,7 +305,7 @@ dbutils.fs.rm(chromadb_path.replace('/dbfs','dbfs:'), recurse=True)
 # generate embeddings
 vectordb = Chroma.from_documents(
   documents=documents, 
-  embedding_model=embedding_model, 
+  embedding=embedding_model, 
   persist_directory=chromadb_path
   )
 
