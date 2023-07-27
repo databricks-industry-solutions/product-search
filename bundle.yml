@@ -1,0 +1,8 @@
+bundle:
+  name: product_search_accelerator
+
+environments:
+  development:
+    default: true
+    workspace:
+      host: ${var.host}
