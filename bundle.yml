@@ -1,0 +1,9 @@
+
+bundle:
+  name: product_search_accelerator
+
+environments:
+  development:
+    default: true
+    workspace:
+      host: https://oregon.cloud.databricks.com

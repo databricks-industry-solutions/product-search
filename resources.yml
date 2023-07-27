@@ -1,0 +1,61 @@
+
+resources:
+  jobs:
+    product_search:
+      name: "[RUNNER] product-search2 | 58f0f3a9ae5fb51715b30be1119a26987edb6a99f133522e7cc3150d6da89d26"
+      timeout_seconds: 28800
+      max_concurrent_runs: 1
+      tags:
+        usage: solacc_testing
+        group: RCG
+        accelerator: prod_search
+      tasks:
+      - job_cluster_key: prod_search_cluster
+        notebook_task:
+          notebook_path: /Repos/jingting.lu@databricks.com/product-search2/00_Intro_and_Config
+        task_key: prod_search_00
+      - job_cluster_key: prod_search_cluster
+        notebook_task:
+          notebook_path: /Repos/jingting.lu@databricks.com/product-search2/01_Data_Prep
+        task_key: prod_search_01
+        depends_on:
+        - task_key: prod_search_00
+      - job_cluster_key: prod_search_cluster
+        notebook_task:
+          notebook_path: /Repos/jingting.lu@databricks.com/product-search2/02_Define_Basic_Search
+        task_key: prod_search_02
+        depends_on:
+        - task_key: prod_search_01
+      - job_cluster_key: prod_search_cluster
+        notebook_task:
+          notebook_path: /Repos/jingting.lu@databricks.com/product-search2/03_Fine_Tune_Model
+        task_key: prod_search_03
+        depends_on:
+        - task_key: prod_search_02
+      - job_cluster_key: prod_search_cluster
+        notebook_task:
+          notebook_path: /Repos/jingting.lu@databricks.com/product-search2/04_Deploy_Model
+        task_key: prod_search_04
+        depends_on:
+        - task_key: prod_search_03
+      job_clusters:
+      - job_cluster_key: prod_search_cluster
+        new_cluster:
+          spark_version: 12.2.x-gpu-ml-scala2.12
+          spark_conf:
+            spark.master: local[*, 4]
+            spark.databricks.cluster.profile: singleNode
+            spark.databricks.delta.preview.enabled: 'true'
+          num_workers: 0
+          node_type_id: g5.8xlarge
+          custom_tags:
+            usage: solacc_testing
+
+environments:
+  development:
+    resources:
+      jobs:
+        product_search:
+          schedule:
+            quartz_cron_expression: 14 8 14 * * ?
+            timezone_id: UTC
