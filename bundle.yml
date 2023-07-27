@@ -4,5 +4,3 @@ bundle:
 environments:
   development:
     default: true
-    workspace:
-      host: ${var.host}

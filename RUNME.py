@@ -30,6 +30,7 @@ import json
 import hashlib
 import os
 
+# # For upgrading from json configurations, use this line below for translating json to yaml
 # import yaml
 # import sys
 # ymal_string=yaml.dump(job_json, sys.stdout, default_flow_style=False, indent=2, sort_keys=False)
@@ -76,10 +77,6 @@ os.environ['DATABRICKS_TOKEN'] = get_notebooks_api_token()
 # COMMAND ----------
 
 # MAGIC %sh /databricks/driver/databricks bundle deploy
-
-# COMMAND ----------
-
-# MAGIC %sh pwd
 
 # COMMAND ----------
 
