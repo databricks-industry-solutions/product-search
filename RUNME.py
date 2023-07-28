@@ -13,7 +13,7 @@
 # MAGIC 2. In case the environment has cluster-policies that interfere with automated deployment, you may need to manually create the cluster in accordance with the workspace cluster policy. The `resources.yml` definition still provides valuable information about the configuration these series of notebooks should run with. 
 # MAGIC
 # MAGIC **Notes**
-# MAGIC 1. The pipelines, workflows and clusters created in this script are not user-specific. Keep in mind that rerunning this script again after modification resets them for other users too.
+# MAGIC 1. The pipelines, workflows created in this script are not user-specific. Keep in mind that rerunning this script again after modification resets them for other users too.
 # MAGIC
 # MAGIC 2. If the job execution fails, please confirm that you have set up other environment dependencies as specified in the accelerator notebooks. Accelerators may require the user to set up additional cloud infra or secrets to manage credentials. 
 
@@ -38,21 +38,27 @@ import os
 # COMMAND ----------
 
 # DBTITLE 1,Gather environmental information
+# get node type
 node_dict = {"AWS": "g5.8xlarge", "MSA": "Standard_NC12s_v3"}
 cloud = get_cloud()
+node_type = node_dict[cloud]
+
+# get solacc path
 solacc_path = get_notebook_dir()
+
+# get job name
 solution_code_name = solacc_path.split('/')[-1]
 hash_code = hashlib.sha256(solacc_path.encode()).hexdigest()
+job_name = f"[RUNNER] {solution_code_name} | {hash_code}" # use hash to differentiate solutions deployed to different paths
 
 # COMMAND ----------
 
 # DBTITLE 1,Set up env vars
 # Set up vars for the bundle
 
-os.environ['BUNDLE_VAR_node_type'] = node_dict[cloud]
-os.environ['BUNDLE_VAR_host'] = get_notebooks_api_endpoint()
-os.environ['BUNDLE_VAR_solacc_path'] = get_notebook_dir()
-os.environ['BUNDLE_VAR_job_name'] = f"[RUNNER] {solution_code_name} | {hash_code}" # use hash to differentiate solutions deployed to different paths
+os.environ['BUNDLE_VAR_node_type'] = node_type
+os.environ['BUNDLE_VAR_solacc_path'] = solacc_path
+os.environ['BUNDLE_VAR_job_name'] = job_name
 
 # Set up authentication for bricks CLI
 

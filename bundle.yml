@@ -1,5 +1,13 @@
 bundle:
   name: product_search_accelerator
+  
+variables:
+  job_name:
+    default: "[Solution Accelerator] Product Search"
+  solacc_path:
+    description: Root path of the solution accelerator in Workspace File System
+  node_type:
+    description: Node type id appropriate for the cloud
 
 environments:
   development:
