@@ -1,7 +1,7 @@
 resources:
   jobs:
     product_search:
-      name: "product search solution accelerator"
+      name: "[RUNNER] product-search | 0315b907795159fed03be231109087ce68ecbfd50679026e29451050e3eb6793"
       timeout_seconds: 28800
       max_concurrent_runs: 1
       tags:
