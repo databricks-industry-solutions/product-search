@@ -14,20 +14,20 @@ Many of the LLMs available from the open source community come available  as pre
 In this solution accelerator, we will show multiple versions of this pattern using an off-the-shelf model, hybrid approaches that combine semantic and keyword search, advanced reranking techniques, and one tuned to a specific body of product text. We'll then tackle the issues related to model deployment so that users can see how a semantic search capability can easily be deployed through their Databricks environment.
 
 ___
-<tim.lortz@databricks.com>  
-<saurabh.shukla@databricks.com>
-<mustafaali.sezer@databricks.com>  
-<peyman@databricks.com>  
-<bryan.smith@databricks.com>  
+
+**Contributors:**
+- tim.lortz@databricks.com  
+- saurabh.shukla@databricks.com
+- mustafaali.sezer@databricks.com  
+- peyman@databricks.com  
+- bryan.smith@databricks.com  
 
 ___
 
-
 <img src='https://github.com/databricks-industry-solutions/product-search/raw/main/images/inference.png' width=800>
 
-```
-## Project Structure
 
+## Project Structure
 ```
 product-search/
 ├── 00_Setup.py                              # Configuration and setup
@@ -53,6 +53,7 @@ To start using a solution accelerator in Databricks simply follow these steps:
 2. Start with `00_Setup.py` to configure your environment settings
 3. Run notebooks in sequence: `01_Data_Prep.py` → `02_Define_Basic_Search.py` → `03_Define_Hybrid_Search.py` → `04_Define_Hybrid_Search_and_Reranker.py` → `05_Fine_Tune_Embedding_Model.py`
 4. The cost associated with running the accelerator is the user's responsibility.
+
 
 ### Recommended Cluster Configuration
 
